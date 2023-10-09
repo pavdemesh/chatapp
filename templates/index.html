@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .input-form {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .input-container {
+            display: flex;
+            align-items: center;
+        }
+
+        #prompt {
+            width: 100%;
+            min-height: 100px;
+            margin-bottom: 10px;
+            padding: 10px;
+            font-size: 16px;
+            resize: vertical;
+        }
+
+        .renew-button {
+            margin-left: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+
+        #conversation {
+            margin-top: 20px;
+        }
+
+        .user-message {
+            background-color: #f2f2f2;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .bot-message {
+            background-color: rgba(249, 174, 178, 0.2);
+            color: black;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait for the DOM content to be fully loaded before adding the event listener
+            var renewButton = document.querySelector('.renew-button'); // Assuming the button has a class name 'renew-button'
+            renewButton.addEventListener('click', function() {
+                renewConversation(); // Call the renewConversation function when the button is clicked
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <form action="/ask" method="post" class="input-form">
+            <label for="prompt">Enter your prompt:</label>
+            <div class="input-container">
+                <textarea id="prompt" name="prompt" oninput="adjustTextareaHeight(this)" required></textarea>
+                <button type="submit">Ask</button>
+            </div>
+        </form>
+        <button type="submit" class="renew-button">Renew Conversation</button>
+        <div id="conversation">
+            {% for message in conversation %}
+                {% if message.user %}
+                    <div class="user-message">{{ message.user }}</div>
+                {% elif message.bot %}
+                    <div class="bot-message">{{ message.bot }}</div>
+                {% endif %}
+    {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        function adjustTextareaHeight(textarea) {
+            // Get the client height and scroll height of the textarea
+            const clientHeight = textarea.clientHeight;
+            const scrollHeight = textarea.scrollHeight;
+
+            // Adjust the height of the textarea if it's completely filled with text
+            if (scrollHeight > clientHeight) {
+                textarea.style.height = scrollHeight + "px";
+            }
+        }
+    </script>
+    <script>
+        function renewConversation() {
+            // Clear the text area content
+            document.getElementById('prompt').value = '';
+            // Clear the conversation history (assuming the conversation is inside an element with the ID 'conversation')
+            document.getElementById('conversation').innerHTML = '';
+            }
+    </script>
+
+</body>
+</html>
